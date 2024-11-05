@@ -2,38 +2,18 @@ import os
 from openai import OpenAI
 from PyPDF2 import PdfReader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
-# from langchain.embeddings import GooglePalmEmbeddings
-# from langchain.llms import GooglePalm
+from langchain_community.embeddings import OpenAIEmbeddings  # Updated import as per warning
 from langchain_openai import ChatOpenAI
-# from langchain.vectorstores import FAISS
 from langchain_community.vectorstores import FAISS
-from langchain.embeddings import OpenAIEmbeddings
-
 from langchain.chains import ConversationalRetrievalChain
 from langchain.memory import ConversationBufferMemory
 from dotenv import load_dotenv
-
 
 load_dotenv()
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")  
 os.environ['OPENAI_API-KEY'] =  OPENAI_API_KEY
 
 
-# client = OpenAI(api_key=OPENAI_API_KEY)
-# completion = client.chat.completions.create(
-#     model="gpt-4o-mini",
-#     messages=[
-#         {"role": "system", "content": "You are a helpful assistant."},
-#         {
-#             "role": "user",
-#             "content": "explain transformers."
-#         }
-#     ],
-#     max_tokens=100,
-#     temperature=0.5,
-# )
-
-# print(completion.choices[0].message.content)
 
 def get_pdf_text(pdf_docs):
     text=""
@@ -53,7 +33,7 @@ def get_text_chunks(text):
 
 
 def get_vector_store(text_chunks):
-    embeddings = OpenAIEmbeddings()
+    embeddings = OpenAIEmbeddings(model="text-embedding-ada-002")
     vector_store = FAISS.from_texts(text_chunks, embedding=embeddings)
     return vector_store
 
